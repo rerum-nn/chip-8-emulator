@@ -31,6 +31,10 @@ private:
     std::array<uint16_t, kGRP> grp_regs_;
     uint16_t i_reg_;
     uint16_t pc_reg_;
+
+    uint8_t wait_timer_;
+    uint8_t sound_timer_;
+
     // TODO: Make a stack reg
 
     void Execute(); // Program processing
