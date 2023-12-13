@@ -27,6 +27,8 @@ public:
     // TODO: Errors dispatcher (may be or may be not)
 
 private:
+    static const uint32_t kStackSize = 16;
+
     Memory memory_;
     std::array<uint16_t, kGRP> grp_regs_;
     uint16_t i_reg_;
@@ -35,7 +37,7 @@ private:
     uint8_t wait_timer_;
     uint8_t sound_timer_;
 
-    // TODO: Make a stack reg
+    uint16_t stack_reg_[kStackSize];
 
     void Execute(); // Program processing
 
