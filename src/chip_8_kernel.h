@@ -18,7 +18,7 @@ public:
 
     const Memory& GetMemory() const;
 
-    void LoadProgram(uint8_t* programm, size_t n);
+    void LoadProgram(uint8_t* program, size_t n);
 
     void Run();
 
