@@ -3,6 +3,7 @@
 #include <array>
 #include <unordered_map>
 #include "memory.h"
+#include "opcode.h"
 
 class ChipKernel {
 private:
