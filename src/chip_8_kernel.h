@@ -29,6 +29,7 @@ public:
 
 private:
     static const uint32_t kStackSize = 16;
+    static const uint16_t kExecutionStart = 0x200;
 
     Memory memory_;
     std::array<uint16_t, kGRP> grp_regs_;

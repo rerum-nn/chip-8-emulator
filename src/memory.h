@@ -9,7 +9,6 @@ private:
     static const size_t kMaxAddress = 0xFFF;
 public:
     static const size_t kMemorySize = 4096;
-    static const size_t kExecutionStart = 0x200;
 
     Memory();
 
