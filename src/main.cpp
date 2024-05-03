@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
     std::string filename;
-    size_t hertz = 2000;
+    size_t hertz = 500;
     size_t scale = 16;
     size_t i = 1;
     while (i < argc) {

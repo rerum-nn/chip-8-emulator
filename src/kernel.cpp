@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <random>
 
+#include "speakers.h"
+
 ChipKernel::ChipKernel(size_t hertz, const Memory& memory)
     : memory_(memory),
       i_reg_(0),
@@ -31,6 +33,8 @@ void ChipKernel::NextInstruction() {
     pc_reg_ += 2;
 }
 void ChipKernel::Run() {
+    Speakers speakers;
+
     display_.ConnectVideoMemory(memory_.GetVideoMemory());
     display_.SetWindowName(cartridge_name_);
 
@@ -74,6 +78,12 @@ void ChipKernel::Run() {
             }
             if (sound_timer_ > 0) {
                 --sound_timer_;
+                if (!speakers.AreActive()) {
+                    speakers.Play();
+                }
+                if (sound_timer_ == 0 && speakers.AreActive()) {
+                    speakers.Stop();
+                }
             }
         }
     }
