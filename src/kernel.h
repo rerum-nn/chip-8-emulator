@@ -13,7 +13,7 @@ private:
     static constexpr size_t kGRP = 16;  // General Purpose Registers amount
 
 public:
-    ChipKernel(const Memory& memory = Memory());
+    ChipKernel(size_t hertz = 2000, const Memory& memory = Memory());
 
     void StoreMemory(const Memory& memory);
     void StoreMemory(Memory&& memory);
@@ -67,4 +67,8 @@ private:
     std::array<uint16_t, kStackSize> stack_reg_;
 
     bool is_ready_to_display_;
+
+    size_t cpu_hertz_;
+
+    std::string cartridge_name_;
 };

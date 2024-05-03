@@ -6,7 +6,7 @@ class Display {
 public:
     static constexpr size_t kWidth = 64;
     static constexpr size_t kHeight = 32;
-    static constexpr const char* kMonitorName = "CHIP-8";
+    static constexpr const char* kWindowName = "CHIP-8";
 
     Display();
 
@@ -17,6 +17,8 @@ public:
     uint8_t WaitForKey();
 
     void Update();
+
+    void SetWindowName(const std::string& name);
 
 private:
     sf::RenderWindow window_;

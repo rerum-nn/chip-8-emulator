@@ -3,14 +3,15 @@
 #include <cstdint>
 #include <random>
 
-ChipKernel::ChipKernel(const Memory& memory)
+ChipKernel::ChipKernel(size_t hertz, const Memory& memory)
     : memory_(memory),
       i_reg_(0),
       pc_reg_(0),
       sp_reg_(0),
       delay_timer_(0),
       sound_timer_(0),
-      is_ready_to_display_(false) {
+      is_ready_to_display_(false),
+      cpu_hertz_(hertz) {
     std::fill(grp_regs_.begin(), grp_regs_.end(), 0);
     std::fill(stack_reg_.begin(), stack_reg_.end(), 0);
 }
@@ -31,12 +32,13 @@ void ChipKernel::NextInstruction() {
 }
 void ChipKernel::Run() {
     display_.ConnectVideoMemory(memory_.GetVideoMemory());
+    display_.SetWindowName(cartridge_name_);
 
     pc_reg_ = kExecutionStart;
 
     Opcode current_op;
 
-    sf::Time cpu_period = sf::seconds(1. / 2000.);
+    sf::Time cpu_period = sf::seconds(1. / cpu_hertz_);
     sf::Time timer_period = sf::seconds(1. / 60.);
     sf::Time fps_period = sf::seconds(1. / 60.);
 
@@ -56,10 +58,10 @@ void ChipKernel::Run() {
             current_op = ReadOpcode();
             display_.CheckKeyboard(memory_.GetInputMemory());
             ExecuteOpcode(current_op);
-//            while (display_.IsOpen() && last_fps_update > fps_period) {
-//                last_fps_update -= fps_period;
-//                display_.Update();
-//            }
+            //            while (display_.IsOpen() && last_fps_update > fps_period) {
+            //                last_fps_update -= fps_period;
+            //                display_.Update();
+            //            }
             if (is_ready_to_display_) {
                 is_ready_to_display_ = false;
                 display_.Update();
@@ -82,6 +84,7 @@ void ChipKernel::LoadProgram(const Cartridge& cartridge) {
     for (size_t pos = 0; pos < data.size(); ++pos) {
         memory_[kExecutionStart + pos] = data[pos];
     }
+    cartridge_name_ = cartridge.GetName();
 }
 
 Opcode ChipKernel::ReadOpcode() {
@@ -123,7 +126,7 @@ void ChipKernel::FlowControl(Opcode opcode) {
                 // SYS
                 default:
                     // TODO: Log that SYS is legacy
-//                    UpdatePcReg(opcode.address.address);
+                    //                    UpdatePcReg(opcode.address.address);
                     break;
             }
             NextInstruction();
@@ -294,7 +297,7 @@ void ChipKernel::SpecialRegisters(Opcode opcode) {
                     i_reg_ += grp_regs_[opcode.constant.reg];
                     break;
                 case 0x29:
-                    i_reg_ = memory_.GetFontLocation( grp_regs_[opcode.constant.reg]);
+                    i_reg_ = memory_.GetFontLocation(grp_regs_[opcode.constant.reg]);
                     break;
                 case 0x33: {
                     uint8_t reg_x = grp_regs_[opcode.reg.x];
@@ -311,13 +314,13 @@ void ChipKernel::SpecialRegisters(Opcode opcode) {
                     for (uint16_t reg = 0; reg <= opcode.reg.x; ++reg) {
                         memory_[i_reg_ + reg] = grp_regs_[reg];
                     }
-//                    i_reg_ += opcode.reg.x + 1;
+                    //                    i_reg_ += opcode.reg.x + 1;
                     break;
                 case 0x65:
                     for (uint16_t reg = 0; reg <= opcode.reg.x; ++reg) {
                         grp_regs_[reg] = memory_[i_reg_ + reg];
                     }
-//                    i_reg_ += opcode.reg.x + 1;
+                    //                    i_reg_ += opcode.reg.x + 1;
                     break;
             }
             break;

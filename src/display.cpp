@@ -22,7 +22,7 @@ static const std::unordered_map<sf::Keyboard::Key, uint8_t> kKeyMap = {
     {sf::Keyboard::Key::V, 0xF},
 };
 
-Display::Display() : window_(sf::VideoMode(kWidth, kHeight), kMonitorName), sprite_() {
+Display::Display() : window_(sf::VideoMode(kWidth, kHeight), kWindowName), sprite_() {
     image_.create(kWidth, kHeight, sf::Color::Black);
     texture_.loadFromImage(image_);
     sprite_.setTexture(texture_);
@@ -83,4 +83,7 @@ uint8_t Display::WaitForKey() {
     }
 
     return 0;
+}
+void Display::SetWindowName(const std::string& name) {
+    window_.setTitle(kWindowName + std::string(": ") + name);
 }
