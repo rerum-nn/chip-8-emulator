@@ -17,7 +17,7 @@ add_executable(chip-8-emulator
         src/cartridge.cpp
 )
 
-target_link_libraries(chip-8-emulator PRIVATE sfml-graphics sfml-audio)
+target_link_libraries(chip-8-emulator PRIVATE sfml-graphics)
 target_compile_features(chip-8-emulator PRIVATE cxx_std_20)
 
 install(TARGETS chip-8-emulator)
