@@ -14,7 +14,6 @@ public:
 
     bool IsOpen() const;
     void CheckKeyboard(uint8_t* input);
-    uint8_t WaitForKey();
 
     void Update();
 

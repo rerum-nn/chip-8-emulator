@@ -7,6 +7,7 @@
 #include "display.h"
 #include "memory.h"
 #include "opcode.h"
+#include "speakers.h"
 
 class ChipKernel {
 private:
@@ -23,7 +24,7 @@ public:
 
     void LoadProgram(const Cartridge& cartridge);
 
-    void Run();
+    void Run(Display& display, Speakers& speakers);
 
     std::unordered_map<char, uint16_t> DumpRegisters() const;
     void StoreRegisters(const std::unordered_map<char, uint16_t>& registers);
@@ -53,7 +54,6 @@ private:
     static constexpr size_t kDisplayWidth = 64;
     static constexpr size_t kDisplayHeight = 32;
 
-    Display display_;
     Memory memory_;
 
     std::array<uint8_t, kGRP> grp_regs_;

@@ -32,11 +32,9 @@ void ChipKernel::UpdatePcReg(uint16_t value) {
 void ChipKernel::NextInstruction() {
     pc_reg_ += 2;
 }
-void ChipKernel::Run() {
-    Speakers speakers;
-
-    display_.ConnectVideoMemory(memory_.GetVideoMemory());
-    display_.SetWindowName(cartridge_name_);
+void ChipKernel::Run(Display& display, Speakers& speakers) {
+    display.ConnectVideoMemory(memory_.GetVideoMemory());
+    display.SetWindowName(cartridge_name_);
 
     pc_reg_ = kExecutionStart;
 
@@ -44,34 +42,34 @@ void ChipKernel::Run() {
 
     sf::Time cpu_period = sf::seconds(1. / cpu_hertz_);
     sf::Time timer_period = sf::seconds(1. / 60.);
-    sf::Time fps_period = sf::seconds(1. / 60.);
+    sf::Time fps_period = sf::seconds(1. / 120.);
 
     sf::Clock kernel_clock;
     sf::Clock timer_clock;
-    sf::Clock fps_clock;
+//    sf::Clock fps_clock;
     sf::Time last_update = sf::Time::Zero;
     sf::Time last_timer_update = sf::Time::Zero;
-    sf::Time last_fps_update = sf::Time::Zero;
+//    sf::Time last_fps_update = sf::Time::Zero;
 
-    while (display_.IsOpen()) {
+    while (display.IsOpen()) {
         last_update += kernel_clock.restart();
         last_timer_update += timer_clock.restart();
-        last_fps_update += fps_clock.restart();
-        while (display_.IsOpen() && last_update > cpu_period) {
+//        last_fps_update += fps_clock.restart();
+        while (display.IsOpen() && last_update > cpu_period) {
             last_update -= cpu_period;
             current_op = ReadOpcode();
-            display_.CheckKeyboard(memory_.GetInputMemory());
+            display.CheckKeyboard(memory_.GetInputMemory());
             ExecuteOpcode(current_op);
-            //            while (display_.IsOpen() && last_fps_update > fps_period) {
-            //                last_fps_update -= fps_period;
-            //                display_.Update();
-            //            }
             if (is_ready_to_display_) {
                 is_ready_to_display_ = false;
-                display_.Update();
+                display.Update();
             }
         }
-        while (display_.IsOpen() && last_timer_update > timer_period) {
+//        while (display.IsOpen() && last_fps_update > fps_period) {
+//            last_fps_update -= fps_period;
+//            display.Update();
+//        }
+        while (display.IsOpen() && last_timer_update > timer_period) {
             last_timer_update -= timer_period;
             if (delay_timer_ > 0) {
                 --delay_timer_;
@@ -294,9 +292,20 @@ void ChipKernel::SpecialRegisters(Opcode opcode) {
                 case 0x07:
                     grp_regs_[opcode.constant.reg] = delay_timer_;
                     break;
-                case 0x0A:
-                    grp_regs_[opcode.constant.reg] = display_.WaitForKey();
+                case 0x0A: {
+                    bool is_pressed = false;
+                    for (size_t i = 0; i < 16; ++i) {
+                        if (memory_.GetInputMemory()[i]) {
+                            grp_regs_[opcode.constant.reg] = i;
+                            is_pressed = true;
+                            break;
+                        }
+                    }
+                    if (!is_pressed) {
+                        return;
+                    }
                     break;
+                }
                 case 0x15:
                     delay_timer_ = grp_regs_[opcode.constant.reg];
                     break;

@@ -38,11 +38,13 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    Display display;
+    Speakers speakers;
     Cartridge demo(filename);
     ChipKernel chip8(hertz);
     chip8.LoadProgram(demo);
 
-    chip8.Run();
+    chip8.Run(display, speakers);
 
     return 0;
 }

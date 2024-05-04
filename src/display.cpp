@@ -68,22 +68,7 @@ void Display::CheckKeyboard(uint8_t* input) {
         }
     }
 }
-uint8_t Display::WaitForKey() {
-    sf::Event event;
 
-    while (window_.waitEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            window_.close();
-            break;
-        } else if (event.type == sf::Event::KeyPressed) {
-            if (kKeyMap.contains(event.key.code)) {
-                return kKeyMap.at(event.key.code);
-            }
-        }
-    }
-
-    return 0;
-}
 void Display::SetWindowName(const std::string& name) {
     window_.setTitle(kWindowName + std::string(": ") + name);
 }
