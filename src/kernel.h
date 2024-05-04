@@ -7,7 +7,6 @@
 #include "display.h"
 #include "memory.h"
 #include "opcode.h"
-#include "speakers.h"
 
 class ChipKernel {
 private:
@@ -24,7 +23,7 @@ public:
 
     void LoadProgram(const Cartridge& cartridge);
 
-    void Run(Display& display, Speakers& speakers);
+    void Run(Display& display);
 
     std::unordered_map<char, uint16_t> DumpRegisters() const;
     void StoreRegisters(const std::unordered_map<char, uint16_t>& registers);

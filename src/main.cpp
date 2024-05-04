@@ -39,12 +39,11 @@ int main(int argc, char* argv[]) {
     }
 
     Display display;
-    Speakers speakers;
     Cartridge demo(filename);
     ChipKernel chip8(hertz);
     chip8.LoadProgram(demo);
 
-    chip8.Run(display, speakers);
+    chip8.Run(display);
 
     return 0;
 }
