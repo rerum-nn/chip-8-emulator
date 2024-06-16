@@ -46,15 +46,12 @@ void ChipKernel::Run(Display& display, Speakers& speakers) {
 
     sf::Clock kernel_clock;
     sf::Clock timer_clock;
-//    sf::Clock fps_clock;
     sf::Time last_update = sf::Time::Zero;
     sf::Time last_timer_update = sf::Time::Zero;
-//    sf::Time last_fps_update = sf::Time::Zero;
 
     while (display.IsOpen()) {
         last_update += kernel_clock.restart();
         last_timer_update += timer_clock.restart();
-//        last_fps_update += fps_clock.restart();
         while (display.IsOpen() && last_update > cpu_period) {
             last_update -= cpu_period;
             current_op = ReadOpcode();
@@ -65,10 +62,6 @@ void ChipKernel::Run(Display& display, Speakers& speakers) {
                 display.Update();
             }
         }
-//        while (display.IsOpen() && last_fps_update > fps_period) {
-//            last_fps_update -= fps_period;
-//            display.Update();
-//        }
         while (display.IsOpen() && last_timer_update > timer_period) {
             last_timer_update -= timer_period;
             if (delay_timer_ > 0) {
@@ -233,7 +226,7 @@ void ChipKernel::MathAndLogic(Opcode opcode) {
             }
             break;
         case 0xC:
-            reg_x = GetRandomByte() % opcode.constant.value;
+            reg_x = GetRandomByte() & opcode.constant.value;
             break;
     }
     NextInstruction();
