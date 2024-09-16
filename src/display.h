@@ -7,8 +7,9 @@ public:
     static constexpr size_t kWidth = 64;
     static constexpr size_t kHeight = 32;
     static constexpr const char* kWindowName = "CHIP-8";
+    static constexpr size_t kDefaultScale = 16;
 
-    Display();
+    Display(size_t scale = kDefaultScale);
 
     void ConnectVideoMemory(const uint8_t* video_memory);
 

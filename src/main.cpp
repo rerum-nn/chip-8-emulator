@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    Display display;
+    Display display(scale);
     Speakers speakers;
     Cartridge demo(filename);
     ChipKernel chip8(hertz);

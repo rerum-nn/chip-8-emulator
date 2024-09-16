@@ -22,11 +22,11 @@ static const std::unordered_map<sf::Keyboard::Key, uint8_t> kKeyMap = {
     {sf::Keyboard::Key::V, 0xF},
 };
 
-Display::Display() : window_(sf::VideoMode(kWidth, kHeight), kWindowName), sprite_() {
+Display::Display(size_t scale) : window_(sf::VideoMode(kWidth, kHeight), kWindowName), sprite_() {
     image_.create(kWidth, kHeight, sf::Color::Black);
     texture_.loadFromImage(image_);
     sprite_.setTexture(texture_);
-    window_.setSize(sf::Vector2u(kWidth * 16, kHeight * 16));
+    window_.setSize(sf::Vector2u(kWidth * scale, kHeight * scale));
 }
 bool Display::IsOpen() const {
     return window_.isOpen();
